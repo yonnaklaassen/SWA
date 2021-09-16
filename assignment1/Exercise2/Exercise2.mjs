@@ -1,39 +1,3 @@
-function unitConverter() {
-    function convertToC(value) {
-        return (value -32) / 1.8
-    }
-    
-    function convertToF(value) {
-        return (value * 1.8) + 32
-    }
-    
-    function convertToMM(value) {
-        return (value * 25.4)
-    }
-    
-    function convertToInches(value) {
-        return (value / 25.4)
-    }
-    
-    function convertToMPH(value) {
-        return (value * 0.44704)
-    }
-    
-    function convertToMS(value) {
-        return (value / 0.44704)
-    }
-
-    return {
-        convertToF,
-        convertToC,
-        convertToMM,
-        convertToInches,
-        convertToMPH,
-        convertToMS
-    }
-    
-}
-
 //DateInterval
 export function DateInterval(fromDate, toDate) {
     return {
