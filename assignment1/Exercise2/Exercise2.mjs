@@ -226,27 +226,3 @@ Windprediction.prototype.convertToMS = function() {
     this.unit = 'MS'
     return new Windprediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
-
-
-// var date2 = new Date(2021, 10, 30)
-// let weatherDataArray = [new WeatherData(date, 'Horsens', 'Temperature', 'C', '20'),
-// new WeatherData(date2, 'Århus', 'Temperature', 'C', '16'),
-// new WeatherData(date2, 'Skanderborg', 'Wind', 'MPH', '200'),
-// new WeatherData(date2, 'Skanderborg', 'Temperature', 'F', '300')]
-// const weatherHistory = new WeatherHistory(weatherDataArray)
-// const dateInt = new DateInterval(new Date(2021, 8, 10), new Date(2021, 8, 20))
-// console.log(weatherHistory.forPeriod(dateInt))
-
-//  const weatherData = new WeatherData(date, 'place', 'type', 'unit', 3434)
-//  console.log(weatherData.getTime())
-
-//  const pre = new Precipitation(date, 'place', 'Precipitation', 'unit', 3434, 'pType')
-//  const pre2 = pre.convertToInches()
-//  console.log(pre2.getValue())
-
-//   const wind = new Wind(date, 'place', 'wind', 'Unit', 3434, 'pType')
-//   const wind2 = wind.convertToMPH()
-//   console.log(wind2.getValue())
-
-// const wd = new WeatherData(date, 'place', 'type', 'unit', 3434)
-// console.log(wd.getValue().convertToF())

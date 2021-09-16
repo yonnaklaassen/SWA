@@ -1,11 +1,11 @@
 import { WeatherForecast } from "./WeatherForecast.mjs";
 import { WeatherHistory } from "./WeatherHistory.mjs";
-import { Temperature } from "./Exercise2.mjs";
-import { Precipitation } from "./Exercise2.mjs";
-import { Wind } from "./Exercise2.mjs";
-import { TemperaraturePrediction } from "./Exercise2.mjs";
-import { PrecipitationPrediction } from "./Exercise2.mjs";
-import { Windprediction } from "./Exercise2.mjs";
+import { Temperature } from "./Exercise2/Exercise2.mjs";
+import { Precipitation } from "./Exercise2/Exercise2.mjs";
+import { Wind } from "./Exercise2/Exercise2.mjs";
+import { TemperaraturePrediction } from "./Exercise2/Exercise2.mjs";
+import { PrecipitationPrediction } from "./Exercise2/Exercise2.mjs";
+import { Windprediction } from "./Exercise2/Exercise2.mjs";
 
 var date = new Date(2021, 8, 15)
 
