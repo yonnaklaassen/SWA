@@ -18,7 +18,6 @@ function DateInterval(fromDate, toDate) {
 
 //Event
 function Event1(time, place) {
-
     this.time = time
     this.place = place
 }
@@ -87,6 +86,7 @@ function Wind(time, place, type, unit, value, direction) {
     WeatherData.call(this, time, place, type, unit, value)
     this.direction = direction
 }
+
 Wind.prototype = Object.create(WeatherData.prototype)
 Wind.prototype.constructor = Wind
 Wind.prototype.getDirection = function() {return this.direction}
@@ -112,7 +112,7 @@ function WeatherHistory(data) {
     }
 
     function forPeriod(period) {
-        return data.filter(d => period.contains(d.getTime()))
+        return new WeatherHistory(data.filter(d => period.contains(d.getTime())))
     }
 
     function including(data) {
@@ -241,7 +241,7 @@ function WeatherForecast(data) {
      }
  
      function forPeriod(period) {
-         return data.filter(d => period.contains(d.getTime()))
+         return new WeatherForecast(data.filter(d => period.contains(d.getTime())))
      }
  
      function including(data) {
