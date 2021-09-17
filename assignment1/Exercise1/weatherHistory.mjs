@@ -28,7 +28,7 @@ export function WeatherHistory(data) {
                         weatherData.convertToF()
                     }
                     break;
-                case "Rain" || "Snow":
+                case "Precipitation":
                     if (weatherData.getUnit() == "mm") {
                         weatherData.convertToInches()
                     }
@@ -51,7 +51,7 @@ export function WeatherHistory(data) {
                         weatherData.convertToC()
                     }
                     break;
-                case "Rain" || "Snow":
+                case "Precipitation":
                     if (weatherData.getUnit() == "inch") {
                         weatherData.convertToMM()
                     }
