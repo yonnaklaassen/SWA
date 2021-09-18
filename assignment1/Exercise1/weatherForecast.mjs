@@ -87,9 +87,9 @@ export function WeatherForecast(data) {
         }else{
             if(typeFilter==null){
                 if(periodFilter==null){
-                    return data.filter(d => d.getPlace()===placeFilter && periodFilter.contains(d.getTime()))
-                }else {
                     return data.filter(d => d.getPlace()===placeFilter)
+                }else {
+                    return data.filter(d => d.getPlace()===placeFilter && periodFilter.contains(d.getTime()))
                 }
             }else {
                 if(periodFilter==null){

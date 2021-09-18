@@ -53,7 +53,6 @@ export function Temperature(time, place, type, unit, value) {
 }
 
 Object.setPrototypeOf(Temperature.prototype, WeatherData.prototype)
-Temperature.prototype.constructor = Temperature
 Temperature.prototype.convertToF = function() { 
 this.value = (this.value * 1.8) + 32
 this.unit = 'F'
@@ -72,7 +71,6 @@ export function Precipitation(time, place, type, unit, value, precipitationType)
 }
 
 Object.setPrototypeOf(Precipitation.prototype, WeatherData.prototype)
-Precipitation.prototype.constructor = Precipitation
 Precipitation.prototype.getParticipationType = function() {return this.precipitationType}
 Precipitation.prototype.convertToInches = function() {
 this.value = (this.value / 25.4)
@@ -92,7 +90,6 @@ export function Wind(time, place, type, unit, value, direction) {
 }
 
 Object.setPrototypeOf(Wind.prototype, WeatherData.prototype)
-Wind.prototype.constructor = Wind
 Wind.prototype.getDirection = function() {return this.direction}
 Wind.prototype.convertToMPH = function() {
     this.value = (this.value * 0.44704)
@@ -105,6 +102,12 @@ Wind.prototype.convertToMS = function() {
     return new Wind(this.time, this.place, this.type, this.unit, this.value, this.direction)
 }
 
+//CloudCoverage
+export function CloudCoverage(time, place, type, unit, value,) {
+    WeatherData.call(this, time, place, type, unit, value)
+}
+
+Object.setPrototypeOf(CloudCoverage.prototype, WeatherData.prototype)
 
 //Weather Prediction
 export function WeatherPrediction(time, place, type, unit, minValue, maxValue) {
@@ -115,11 +118,10 @@ export function WeatherPrediction(time, place, type, unit, minValue, maxValue) {
 }
 
 WeatherPrediction.prototype = Object.create(Event1.prototype)
-WeatherPrediction.prototype.constructor = WeatherPrediction
 Object.assign(WeatherPrediction.prototype, DataType.prototype)
 WeatherPrediction.prototype.matches = function(data) {
     if(data.getTime() === this.time && data.getPlace() === this.place
-    && data.getType() === this.type && data.unit === this.unit) {
+    && data.getType() === this.type && data.unit === this.unit && data.value >= this.minValue && data.value <= this.maxValue) {
         return true
     }
     return false
@@ -133,7 +135,6 @@ export function TemperaraturePrediction(time, place, type, unit, minValue, maxVa
 }
 
 Object.setPrototypeOf(TemperaraturePrediction.prototype, WeatherPrediction.prototype)
-TemperaraturePrediction.prototype.constructor = TemperaraturePrediction
 TemperaraturePrediction.prototype.convertToF = function() {
     this.minValue = (this.minValue * 1.8) + 32
     this.maxValue = (this.maxValue * 1.8) + 32
@@ -154,7 +155,6 @@ export function PrecipitationPrediction(time, place, type, unit, minValue, maxVa
 }
 
 Object.setPrototypeOf(PrecipitationPrediction.prototype, WeatherPrediction.prototype)
-PrecipitationPrediction.prototype.constructor = PrecipitationPrediction
 PrecipitationPrediction.prototype.getExpectedTypes = function() {return this.expectedTypes}
 PrecipitationPrediction.prototype.convertToInches = function() {
     this.minValue = (this.minValue / 25.4)
@@ -170,23 +170,29 @@ PrecipitationPrediction.prototype.convertToMM = function() {
 }
 
 //Windprediction
-export function Windprediction(time, place, type, unit, minValue, maxValue, expectedDirections) {
+export function WindPrediction(time, place, type, unit, minValue, maxValue, expectedDirections) {
     WeatherPrediction.call(this, time, place, type, unit, minValue, maxValue)
     this.expectedDirections = expectedDirections
 }
 
-Object.setPrototypeOf(Windprediction.prototype, WeatherPrediction.prototype)
-Windprediction.prototype.constructor = Windprediction
-Windprediction.prototype.getExpectedDirections = function() {return this.expectedDirections}
-Windprediction.prototype.convertToMPH = function() {
+Object.setPrototypeOf(WindPrediction.prototype, WeatherPrediction.prototype)
+WindPrediction.prototype.getExpectedDirections = function() {return this.expectedDirections}
+WindPrediction.prototype.convertToMPH = function() {
     this.minValue = (this.minValue * 0.44704)
     this.maxValue = (this.maxValue * 0.44704)
     this.unit = 'MPH'
-    return new Windprediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
+    return new WindPrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
-Windprediction.prototype.convertToMS = function() {
+WindPrediction.prototype.convertToMS = function() {
     this.minValue = (this.minValue / 0.44704)
     this.maxValue = (this.maxValue / 0.44704)
     this.unit = 'MS'
-    return new Windprediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
+    return new WindPrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
+
+//Cloud coverage prediction
+export function CloudCoveragePrediction(time, place, type, unit, minValue, maxValue) {
+    WeatherPrediction.call(this, time, place, type, unit, minValue, maxValue)
+}
+
+Object.setPrototypeOf(CloudCoveragePrediction.prototype, WeatherPrediction.prototype)
