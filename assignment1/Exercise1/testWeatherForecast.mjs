@@ -1,10 +1,10 @@
 import {WeatherForecast} from "./weatherForecast.mjs";
-import {CloudCoveragePrediction} from "./weatherDatasAndPredictions.mjs";
-import {TemperaturePrediction} from "./weatherDatasAndPredictions.mjs";
-import {PrecipitationPrediction} from "./weatherDatasAndPredictions.mjs";
-import {WindPrediction} from "./weatherDatasAndPredictions.mjs";
-import {Event} from "./weatherDatasAndPredictions.mjs";
-import {WeatherData} from "./weatherDatasAndPredictions.mjs";
+import {
+    CloudCoveragePrediction,
+    PrecipitationPrediction,
+    TemperaturePrediction,
+    WindPrediction
+} from "./weatherDatasAndPredictions.mjs";
 
 function randomNum(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -80,7 +80,7 @@ for (let i = 0; i < (historyData.length) / 4; i++) {
         + ",min - " + precip.getMin() + precip.getUnit()
         + ", max - " + precip.getMax())
     console.log("Wind: min - " + wind.getMin() + wind.getUnit() + ", max - " + wind.getMax() + wind.getUnit()
-        +", expected directions: "+wind.getExpectedDirections())
+        + ", expected directions: " + wind.getExpectedDirections())
     console.log("CloudCoverage: min - " + cloud.getMin() + cloud.getUnit() + ", max - " + cloud.getMax() + cloud.getUnit())
     console.log("\n")
 }
