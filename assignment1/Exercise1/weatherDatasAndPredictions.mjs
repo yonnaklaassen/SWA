@@ -55,7 +55,7 @@ export function Temperature(time, place, type, unit, value) {
 }
 
 export function Precipitation(time, place, type, unit, value, precipitationType) {
-    const state = {time, place, type, unit, value, precipitationType}
+    const state = {time, place, type, unit, value}
     const weatherData = WeatherData(state)
 
     function getPrecipitationType() {
@@ -135,8 +135,8 @@ export function WeatherPrediction(state) {
     return {...event, ...dataType, getMax, getMin, matches}
 }
 
-export function TemperaturePrediction(time, place, type, unit, value, max, min) {
-    const state = {time, place, type, unit, value, min, max}
+export function TemperaturePrediction(time, place, type, unit, max, min) {
+    const state = {time, place, type, unit, min, max}
     const weatherPrediction = WeatherPrediction(state)
 
     function convertToF() {
@@ -159,13 +159,12 @@ export function TemperaturePrediction(time, place, type, unit, value, max, min) 
     return {...weatherPrediction, convertToC, convertToF}
 }
 
-export function PrecipitationPrediction(time, place, type, unit, value, min, max) {
-    const state = {time, place, type, unit, value, min, max}
+export function PrecipitationPrediction(time, place, type, unit, min, max, precipitationType) {
+    const state = {time, place, type, unit, min, max}
     const weatherPrediction = WeatherPrediction(state)
 
     function getExpectedTypes() {
-        // TODO: not sure what this one should do - return all the possible types of precipitation??
-        return ["Rain","Snow"]
+        return precipitationType
     }
 
     function matches(data) {
@@ -175,6 +174,7 @@ export function PrecipitationPrediction(time, place, type, unit, value, min, max
     function convertToInches() {
         if (state.unit == "mm") {
             state.min *= 1.25
+            state.max *= 1.25
             state.unit = "inch"
         }
     }
@@ -182,6 +182,7 @@ export function PrecipitationPrediction(time, place, type, unit, value, min, max
     function convertToMM() {
         if (state.unit == "inch") {
             state.min *= 0.75
+            state.max *= 0.75
             state.unit = "mm"
         }
     }
@@ -189,13 +190,13 @@ export function PrecipitationPrediction(time, place, type, unit, value, min, max
     return {...weatherPrediction, getExpectedTypes, matches, convertToInches, convertToMM}
 }
 
-export function WindPrediction(time, place, type, unit, value, min, max) {
-    const state = {time, place, type, unit, value, min, max}
+// wind directions: "N", "S", "W", "E", NW, NE, SW, SE,
+export function WindPrediction(time, place, type, unit, min, max, expectedDirections) {
+    const state = {time, place, type, unit, min, max, expectedDirections}
     const weatherPrediction = WeatherPrediction(state)
 
     function getExpectedDirections() {
-        // TODO: not sure what this one should do - return all possible directions??
-        return ["N", "S", "W", "E"]
+        return state.expectedDirections
     }
 
     function convertToMPH() {
@@ -214,11 +215,11 @@ export function WindPrediction(time, place, type, unit, value, min, max) {
         }
     }
 
-    return {...weatherPrediction}
+    return {...weatherPrediction, getExpectedDirections, convertToMPH, convertToMS}
 }
 
-export function CloudCoveragePrediction(time, place, type, unit, value, min, max) {
-    const state = {time, place, type, unit, value, min, max}
+export function CloudCoveragePrediction(time, place, type, unit, min, max) {
+    const state = {time, place, type, unit, min, max}
     const weatherPrediction = WeatherPrediction(state)
     return {...weatherPrediction}
 }

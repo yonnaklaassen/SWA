@@ -14,26 +14,6 @@ function randomNum(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// sandbox
-let x = Event({time: 10.00, place: "here"})
-console.log(x.getPlace())
-
-
-let y = WeatherData({time: 12.00, place: "there", unit: "C", type: "other", value: 12})
-
-let c  = Temperature(12.00, "there", "temperature", "F", 56.0)
-let list = []
-
-list.push(y)
-list.push(c)
-
-
-list.forEach((d) => {
-    if (d.getType() == "temperature") {
-        console.log("this is temperature data:" + d.getValue())
-    }
-})
-
 // @@@@@@@@@@@@@@@@@@@@@@@@ REAL TEST @@@@@@@@@@@@@@@@@@@@
 // date: newDate(2021,8,13, 12, 0, 0)
 
@@ -50,20 +30,20 @@ const inch = "inch"
 const millimeters = "mm"
 const metersPerSecond = "ms"
 const milesPerHour = "mph"
-const percent = "%" // from 0/8 to 8/8
+const percent = "%"
 
 //precipitation types
 const precipitationRain = "Rain"
 const precipitationSnow = "Snow"
 
-// wind directions: N,S,W,E
+// wind directions: "N", "S", "W", "E", NW, NE, SW, SE,
 
 // @@@@@ initial test
 let historyData = []
 let date = new Date(2020,8,27,12,0,0)
 let place = "Aarhus"
 
-for (let i = 0; i < 9; i++) {
+for (let i = 0; i < 5; i++) {
     historyData.push(
         Temperature(date,place,temperature,celsius, randomNum(-11,25)),
         Precipitation(date,place,precipitation, millimeters, randomNum(0,10), precipitationRain),
@@ -75,6 +55,13 @@ for (let i = 0; i < 9; i++) {
     date = nextDay
 }
 let weatherHistory = WeatherHistory(historyData)
+place = "Horsens"
+weatherHistory.add([
+    Temperature(date,place,temperature,celsius, randomNum(-11,25)),
+    Precipitation(date,place,precipitation, millimeters, randomNum(0,10), precipitationRain),
+    Wind(date,place,wind,metersPerSecond,randomNum(0.1, 10),"N"),
+    CloudCoverage(date,place,cloudCoverage,percent,randomNum(0,100))
+])
 
 // @@@@ lets filter weatherHistory and print some stuff
 let types = [temperature, precipitation, wind, cloudCoverage]
