@@ -17,13 +17,13 @@ export function DateInterval(fromDate, toDate) {
 }
 
 //Event
-export function Event1(time, place) {
+export function Event(time, place) {
     this.time = time
     this.place = place
 }
 
-Event1.prototype.getTime = function() {return this.time}
-Event1.prototype.getPlace = function() {return this.place}
+Event.prototype.getTime = function() {return this.time}
+Event.prototype.getPlace = function() {return this.place}
 
 //DataType
 export function DataType(type, unit) {
@@ -37,12 +37,12 @@ DataType.prototype.getUnit = function() {return this.unit}
 
 //WeatherData
 export function WeatherData(time, place, type, unit, value) {
-    Event1.call(this, time, place)
+    Event.call(this, time, place)
     DataType.call(this, type, unit)
     this.value = value
 }
 
-WeatherData.prototype = Object.create(Event1.prototype)
+WeatherData.prototype = Object.create(Event.prototype)
 Object.assign(WeatherData.prototype, DataType.prototype)
 
 WeatherData.prototype.getValue = function() {return this.value}
@@ -111,13 +111,13 @@ Object.setPrototypeOf(CloudCoverage.prototype, WeatherData.prototype)
 
 //Weather Prediction
 export function WeatherPrediction(time, place, type, unit, minValue, maxValue) {
-    Event1.call(this, time, place)
+    Event.call(this, time, place)
     DataType.call(this, type, unit)
     this.minValue = minValue
     this.maxValue = maxValue
 }
 
-WeatherPrediction.prototype = Object.create(Event1.prototype)
+WeatherPrediction.prototype = Object.create(Event.prototype)
 Object.assign(WeatherPrediction.prototype, DataType.prototype)
 WeatherPrediction.prototype.matches = function(data) {
     if(data.getTime() === this.time && data.getPlace() === this.place
