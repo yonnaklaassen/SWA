@@ -1,5 +1,3 @@
-import { WeatherData } from "./WeatherDataAndPredictions.mjs"
-
 export function Weather(data) {
     this.data = data
     this.placeFilter = null
@@ -110,7 +108,7 @@ Weather.prototype.getFilteredData = function() {
     if(this.placeFilter==null){
         if(this.typeFilter==null){
             if(this.periodFilter==null){
-                return []
+                return this.data
             }else{
                 return this.data.filter(d => this.periodFilter.contains(d.getTime()))
             }
