@@ -9,6 +9,21 @@ import { WindPrediction } from "./WeatherDataAndPredictions.mjs"
 import { CloudCoveragePrediction } from "./WeatherDataAndPredictions.mjs"
 import { PrecipitationPrediction } from "./WeatherDataAndPredictions.mjs"
 import { DateInterval } from "./WeatherDataAndPredictions.mjs"
+import {
+    celsius,
+    cloudCoverage,
+    fahrenheit,
+    inch,
+    metersPerSecond,
+    millimeters,
+    okta,
+    precipitation,
+    temperature,
+    wind,
+    precipitationSnow,
+    milesPerHour,
+    precipitationRain
+} from "../unitsAndTypes.mjs";
 
 const weatherTypes = ['History', 'Forecast']
 
@@ -16,28 +31,25 @@ const date1 = new Date(2021, 8, 15)
 const date2 = new Date(2021, 5, 12)
 const place = ['Horsens', 'Århus']
 
-const units = ['C', 'F', 'Inch', 'MM', 'MPH', 'MS', 'Oktas']
-const types = ['Temperature', 'Precipitation', 'Wind', 'Cloud']
+const temp = new Temperature(date1, place[0], temperature, celsius, 12)
+const prec = new Precipitation(date2, place[1], precipitation, inch, 20, precipitationSnow)
+const windW = new Wind(date1, place[0], wind, milesPerHour, 100, 'West')
+const cloudCover = new CloudCoverage(date2, place[0], cloudCoverage, okta, 4)
 
-const temp = new Temperature(date1, place[0], types[0], units[0], 12)
-const prec = new Precipitation(date2, place[1], types[1], units[3], 20, 'snow')
-const wind = new Wind(date1, place[0], types[2], units[4], 100, 'West')
-const cloudCoverage = new CloudCoverage(date2, place[0], types[3], units[6], 4)
-
-const tempPredict = new TemperaraturePrediction(date1, place[1], types[0], units[1], 10, 20)
-const precPredict = new PrecipitationPrediction(date2, place[0], types[1], units[3], 10, 15, 'rain')
-const windPredict = new WindPrediction(date1, place[1], types[2], units[5], 100, 130, 'West')
-const cloudPredict = new CloudCoveragePrediction(date2, place[0], types[3], units[6], 2, 4)
+const tempPredict = new TemperaraturePrediction(date1, place[1], temperature, fahrenheit, 10, 20)
+const precPredict = new PrecipitationPrediction(date2, place[0], precipitation, millimeters, 10, 15, precipitationRain)
+const windPredict = new WindPrediction(date1, place[1], wind, metersPerSecond, 100, 130, 'West')
+const cloudPredict = new CloudCoveragePrediction(date2, place[0], cloudCoverage, okta, 2, 4)
 
 console.log("\u001b[1;34m WEATHER HISTORY TEST")
 const weatherDataArray = new Array()
 weatherDataArray.push(temp)
 weatherDataArray.push(prec)
-weatherDataArray.push(wind)
+weatherDataArray.push(windW)
 const weatherHistory = new WeatherHistory(weatherDataArray)
 
 let weatherDataArray2  = new Array()
-weatherDataArray2 .push(cloudCoverage)
+weatherDataArray2 .push(cloudCover)
 weatherHistory.add(weatherDataArray2)
 
 //Testing US conversion
@@ -70,7 +82,7 @@ placeHorsensAndPeriod .forEach(d => {
     console.log("\u001b[1;32m Place: " + d.getPlace() + "\nTime: " + d.getTime())
 })
 console.log("\u001b[1;33m FILTER BY HORSENS, PERIOD AND TYPE:\n")
-weatherHistory.setTypeFilter(types[0])
+weatherHistory.setTypeFilter(temperature)
 const placeHorsensAndPeriodAndTemperature  = weatherHistory.getFilteredData()
 placeHorsensAndPeriodAndTemperature.forEach(d => {
     console.log("\u001b[1;32m Place: " + d.getPlace() + "\nTime: " + d.getTime() + '\nType: ' + d.getType())

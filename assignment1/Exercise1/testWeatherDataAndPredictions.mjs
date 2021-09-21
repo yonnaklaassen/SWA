@@ -26,9 +26,6 @@ import {
 const date = new Date(2021, 8, 15)
 const place = 'Horsens'
 
-const units = ['C', 'F', 'Inch', 'MM', 'MPH', 'MS', 'Oktas']
-const types = ['Temperature', 'Precipitation', 'Wind', 'Cloud']
-
 //Test temperature
 console.log("\u001b[1;34m TEMPERATURE TEST")
 const temp = Temperature(date, place, temperature, celsius, 12)
