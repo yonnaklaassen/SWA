@@ -139,13 +139,11 @@ TemperaraturePrediction.prototype.convertToF = function() {
     this.minValue = (this.minValue * 1.8) + 32
     this.maxValue = (this.maxValue * 1.8) + 32
     this.unit = 'F'
-    return new TemperaraturePrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
 TemperaraturePrediction.prototype.convertToC = function() {
     this.minValue = (this.minValue -32) / 1.8
     this.maxValue = (this.maxValue -32) / 1.8
     this.unit = 'C'
-    return new TemperaraturePrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
 
 //PrecipitationPrediction
@@ -160,13 +158,11 @@ PrecipitationPrediction.prototype.convertToInches = function() {
     this.minValue = (this.minValue / 25.4)
     this.maxValue = (this.maxValue / 25.4)
     this.unit = 'Inch'
-    return new PrecipitationPrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue, this.expectedTypes)
 }
 PrecipitationPrediction.prototype.convertToMM = function() {
     this.minValue = (this.minValue * 25.4)
     this.maxValue = (this.maxValue * 25.4)
     this.unit = 'MM'
-    return new PrecipitationPrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue, this.expectedTypes)
 }
 
 //Windprediction
@@ -181,13 +177,11 @@ WindPrediction.prototype.convertToMPH = function() {
     this.minValue = (this.minValue * 0.44704)
     this.maxValue = (this.maxValue * 0.44704)
     this.unit = 'MPH'
-    return new WindPrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
 WindPrediction.prototype.convertToMS = function() {
     this.minValue = (this.minValue / 0.44704)
     this.maxValue = (this.maxValue / 0.44704)
     this.unit = 'MS'
-    return new WindPrediction(this.time, this.place, this.type, this.unit, this.minValue, this.maxValue)
 }
 
 //Cloud coverage prediction
