@@ -8,10 +8,7 @@ export function DateInterval(fromDate, toDate) {
             return toDate
         },
         contains(date) {
-            if(date > fromDate && date < toDate ) {
-                return true;
-            }
-             return false;
+            return date > fromDate && date < toDate
         }
     }
 }
