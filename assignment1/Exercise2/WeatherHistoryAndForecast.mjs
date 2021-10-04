@@ -1,65 +1,93 @@
-export function Weather(data) {
-    this.data = data
-    this.placeFilter = null
-    this.typeFilter = null
-    this.periodFilter = null
-}
+export class Weather {
+    constructor(data) {
+        this.data = data
+        this.placeFilter = null
+        this.typeFilter = null
+        this.periodFilter = null
+    }
 
-Weather.prototype.getPlace = function() { return this.placeFilter}
-Weather.prototype.setPlaceFilter = function(place) {this.placeFilter = place}
-Weather.prototype.clearPlaceFilter = function() {  this.placeFilter = null}
-Weather.prototype.getTypeFilter = function() {return this.typeFilter}
-Weather.prototype.setTypeFilter = function(type) {this.typeFilter = type}
-Weather.prototype.clearTypeFilter = function() {this.typeFilter = null}
-Weather.prototype.getPeriodFilter = function() {return this.periodFilter}
-Weather.prototype.setPeriodFilter = function(period) {this.periodFilter = period}
-Weather.prototype.clearPeriodFilter = function() {this.periodFilter = null}
-Weather.prototype.convertToUsUnits = function(weatherType) {
-    this.data.forEach(data => {
-        switch(data.getType())
-        {
-        case 'Temperature':
-            if(data.getUnit() === 'C') {
-                if(weatherType === 'Forecast') {
-                    data.minValue = (data.minValue * 1.8) + 32
-                    data.maxValue = (data.maxValue * 1.8) + 32
-                }
-                else {
-                    data.value = (data.value * 1.8) + 32
-                }
-      
-                data.unit = 'F'
-            } 
-            break;
-        case 'Precipitation':
-            if(data.getUnit() === 'MM') {
-                if(weatherType === 'Forecast') {
-                    data.minValue = (data.minValue / 25.4)
-                    data.maxValue = (data.maxValue / 25.4)
-                }
-                else {
-                    data.value = (data.value / 25.4)
-                }
-            data.unit = 'Inch'
-            } 
-            break;
-        case 'Wind':
-            if(data.getUnit() === 'MS') {
-                if(weatherType === 'Forecast') {
-                    data.minValue = (data.minValue * 0.44704)
-                    data.maxValue = (data.maxValue * 0.44704)
-                }
-                else {
-                    data.value = (data.value * 0.44704)
-                }
-            data.unit = 'MPH'
-            } 
-            break;
-        }
-    })
-}
+    getPlace() {
+        return this.placeFilter
+    }
 
-Weather.prototype.convertToInternationalUnits = function(weatherType) {
+    setPlaceFilter(place) {
+        this.placeFilter = place
+    }
+
+    clearPlaceFilter() {
+        this.placeFilter = null
+    }
+
+    getTypeFilter() {
+        return this.typeFilter
+    }
+
+    setTypeFilter(type) {
+        this.typeFilter = type
+    }
+
+    clearPeriodFilter() {
+        this.typeFilter = null
+    }
+
+    getPeriodFilter() {
+        return this.periodFilter
+    }
+
+    setPeriodFilter(period) {
+        this.periodFilter = period
+    }
+
+    clearPeriodFilter() {
+        this.periodFilter = null
+    }
+
+    convertToUsUnits(weatherType) {
+        this.data.forEach(data => {
+            switch(data.getType())
+            {
+            case 'Temperature':
+                if(data.getUnit() === 'C') {
+                    if(weatherType === 'Forecast') {
+                        data.minValue = (data.minValue * 1.8) + 32
+                        data.maxValue = (data.maxValue * 1.8) + 32
+                    }
+                    else {
+                        data.value = (data.value * 1.8) + 32
+                    }
+          
+                    data.unit = 'F'
+                } 
+                break;
+            case 'Precipitation':
+                if(data.getUnit() === 'MM') {
+                    if(weatherType === 'Forecast') {
+                        data.minValue = (data.minValue / 25.4)
+                        data.maxValue = (data.maxValue / 25.4)
+                    }
+                    else {
+                        data.value = (data.value / 25.4)
+                    }
+                data.unit = 'Inch'
+                } 
+                break;
+            case 'Wind':
+                if(data.getUnit() === 'MS') {
+                    if(weatherType === 'Forecast') {
+                        data.minValue = (data.minValue * 0.44704)
+                        data.maxValue = (data.maxValue * 0.44704)
+                    }
+                    else {
+                        data.value = (data.value * 0.44704)
+                    }
+                data.unit = 'MPH'
+                } 
+                break;
+            }
+        })
+    }
+
+    convertToInternationalUnits(weatherType) {
         this.data.forEach(data => {
             switch(data.getType())
             {
@@ -101,51 +129,56 @@ Weather.prototype.convertToInternationalUnits = function(weatherType) {
                 break;
             }
         })
-}
+    }
 
-Weather.prototype.add = function(data) {this.data.push(...data)}
-Weather.prototype.getFilteredData = function() {
-    if(this.placeFilter==null){
-        if(this.typeFilter==null){
-            if(this.periodFilter==null){
-                return this.data
+    add(data) {
+        this.data.push(...data)
+    }
+
+    getFilteredData() {
+        if(this.placeFilter==null){
+            if(this.typeFilter==null){
+                if(this.periodFilter==null){
+                    return this.data
+                }else{
+                    return this.data.filter(d => this.periodFilter.contains(d.getTime()))
+                }
             }else{
-                return this.data.filter(d => this.periodFilter.contains(d.getTime()))
+                if(this.periodFilter==null){
+                    return this.data.filter(d => d.getType()===this.typeFilter)
+                }else{
+                    return this.data.filter(d => this.periodFilter.contains(d.getTime()) && d.getType()===this.typeFilter)
+                }
             }
         }else{
-            if(this.periodFilter==null){
-                return this.data.filter(d => d.getType()===this.typeFilter)
-            }else{
-                return this.data.filter(d => this.periodFilter.contains(d.getTime()) && d.getType()===this.typeFilter)
-            }
-        }
-    }else{
-        if(this.typeFilter==null){
-            if(this.periodFilter==null){
-                return this.data.filter(d => d.getPlace()===this.placeFilter) 
+            if(this.typeFilter==null){
+                if(this.periodFilter==null){
+                    return this.data.filter(d => d.getPlace()===this.placeFilter) 
+                }else {
+                    return this.data.filter(d => d.getPlace()===this.placeFilter && this.periodFilter.contains(d.getTime()))
+                }
             }else {
-                return this.data.filter(d => d.getPlace()===this.placeFilter && this.periodFilter.contains(d.getTime()))
-            }
-        }else {
-            if(this.periodFilter==null){
-                return this.data.filter(d => d.getPlace()===this.placeFilter && d.getType()=== this.typeFilter)
-            }else{
-                return this.data.filter(d => d.getPlace()===this.placeFilter && d.getType()=== this.typeFilter && this.periodFilter.contains(d.getTime()))
+                if(this.periodFilter==null){
+                    return this.data.filter(d => d.getPlace()===this.placeFilter && d.getType()=== this.typeFilter)
+                }else{
+                    return this.data.filter(d => d.getPlace()===this.placeFilter && d.getType()=== this.typeFilter && this.periodFilter.contains(d.getTime()))
+                }
             }
         }
     }
 }
 
 //WeatherForecast
-export function WeatherForecast(data) {
-    Weather.call(this, data)
+export class WeatherForecast extends Weather {
+    constructor(data) {
+        super(data)
+    }
 }
 
-WeatherForecast.prototype = Object.create(Weather.prototype)
 
 //WeatherHistory
-export function WeatherHistory(data) {
-    Weather.call(this, data)
+export class WeatherHistory extends Weather {
+    constructor(data) {
+        super(data)
+    }
 }
-
-WeatherHistory.prototype = Object.create(Weather.prototype)

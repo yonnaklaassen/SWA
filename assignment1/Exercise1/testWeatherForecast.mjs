@@ -5,32 +5,21 @@ import {
     TemperaturePrediction,
     WindPrediction
 } from "./weatherDatasAndPredictions.mjs";
+import {
+    celsius,
+    cloudCoverage,
+    metersPerSecond,
+    millimeters,
+    percent,
+    precipitation,
+    precipitationRain,
+    temperature,
+    wind
+} from "../unitsAndTypes.mjs";
 
 function randomNum(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
-
-// @@@@@@@@@@@@@@@@@@@@@@@@ REAL TEST @@@@@@@@@@@@@@@@@@@@
-// date: newDate(2021,8,13, 12, 0, 0)
-
-// types
-const temperature = "Temperature"
-const precipitation = "Precipitation"
-const wind = "Wind"
-const cloudCoverage = "CloudCoverage"
-
-// units
-const celsius = "C"
-const fahrenheit = "F"
-const inch = "inch"
-const millimeters = "mm"
-const metersPerSecond = "ms"
-const milesPerHour = "mph"
-const percent = "%"
-
-//precipitation types
-const precipitationRain = "Rain"
-const precipitationSnow = "Snow"
 
 // wind directions: "N", "S", "W", "E", NW, NE, SW, SE,
 
@@ -64,7 +53,7 @@ let dataFilteredByType = []
 
 types.forEach((type) => {
     weatherForecast.setTypeFilter(type)
-    dataFilteredByType.push(weatherForecast.getFilteredPredictions())
+    dataFilteredByType.push(weatherForecast.getFilteredData())
     weatherForecast.clearTypeFilter()
 })
 // weatherPrediction and print some stuff
