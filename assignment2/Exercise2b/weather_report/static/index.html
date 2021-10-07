@@ -1,8 +1,82 @@
 <html>
   <head>
+    <script type="module">
+      import { getDataByPlace, showWeatherDataForecasts, showWeatherDataTemperature, showWeatherDataWind, showWeatherDataPrecipitation, showMinTemperature, showMaxTemperature, showTotalPrecipitation, showAverageWindSpeed, displayError } from './service.js'
 
+      window.init = function() {
+        Promise.all([fetch('http://localhost:8080/data'), fetch('http://localhost:8080/forecast')])
+        .then(res => res.every(r => r.ok) ? res : Promise.reject('Error message'))
+        .then(res => res.map(r => r.json()))
+        .then(r => Promise.all(r))
+        .then(([weatherData, forecasts]) => {
+          //Horsens
+          const temperaturesHorsens = getDataByPlace(weatherData, 'temperature', 'Horsens')
+          const windHorsens = getDataByPlace(weatherData, 'wind speed', 'Horsens')
+          const precipitationHorsens = getDataByPlace(weatherData, 'precipitation', 'Horsens')
+
+          //Aarhus
+          const temperaturesAarhus = getDataByPlace(weatherData, 'temperature', 'Aarhus')
+          const windAarhus = getDataByPlace(weatherData, 'wind speed', 'Aarhus')
+          const precipitationAarhus = getDataByPlace(weatherData, 'precipitation', 'Aarhus')
+
+          //Copenhagen
+          const temperaturesCopenhagen = getDataByPlace(weatherData, 'temperature', 'Copenhagen')
+          const windCopenhagen =getDataByPlace(weatherData, 'wind speed', 'Copenhagen')
+          const precipitationCopenhagen = getDataByPlace(weatherData, 'precipitation', 'Copenhagen')
+
+          //Forecasts
+          const forecastHorsens = forecasts.filter(f => f.place === 'Horsens')
+          const forecastAarhus = forecasts.filter(f => f.place === 'Aarhus')
+          const forecastCopenhagen = forecasts.filter(f => f.place === 'Copenhagen')
+
+         //Horsens
+         showWeatherDataTemperature(temperaturesHorsens, 0)
+         showWeatherDataWind(windHorsens, 0)
+         showWeatherDataPrecipitation(precipitationHorsens, 0)
+         showMinTemperature(temperaturesHorsens, 0)
+         showMaxTemperature(temperaturesHorsens, 0)
+         showTotalPrecipitation(precipitationHorsens, 0)
+         showAverageWindSpeed(windHorsens, 0)
+         showWeatherDataForecasts(forecastHorsens, 0)
+
+         //Aarhus
+         showWeatherDataTemperature(temperaturesAarhus, 1)
+         showWeatherDataWind(windAarhus, 1)
+         showWeatherDataPrecipitation(precipitationAarhus, 1)
+         showMinTemperature(temperaturesAarhus, 1)
+         showMaxTemperature(temperaturesAarhus, 1)
+         showTotalPrecipitation(precipitationAarhus, 1)
+         showAverageWindSpeed(windAarhus, 1)
+         showWeatherDataForecasts(forecastAarhus, 1)
+
+         //Copenhagen
+         showWeatherDataTemperature(temperaturesCopenhagen, 2)
+         showWeatherDataWind(windCopenhagen, 2)
+         showWeatherDataPrecipitation(precipitationCopenhagen, 2)
+         showMinTemperature(temperaturesCopenhagen, 2)
+         showMaxTemperature(temperaturesCopenhagen, 2)
+         showTotalPrecipitation(precipitationCopenhagen, 2)
+         showAverageWindSpeed(windCopenhagen, 2)
+         showWeatherDataForecasts(forecastCopenhagen, 2)
+        })
+        .catch(e => displayError(e))
+      }
+
+  </script>
   </head>
-  <body>
-    
+  <body onload="init()">
+    <h2>Latest measurements Horsens</h2>
+    <div id='horsens-data'></div>
+    <h2>Latest measurements Aarhus</h2>
+    <div id='aarhus-data'></div>
+    <h2>Latest measurements Copenhagen</h2>
+    <div id='copenhagen-data'></div>
+    <h2>Forecast Horsens</h2>
+    <div id='horsens-forecast'></div>
+    <h2>Forecast Aarhus</h2>
+    <div id='aarhus-forecast'></div>
+    <h2>Forecast Copenhagen</h2>
+    <div id='copenhagen-forecast'></div>
+    <p id="error-message"></p>
   </body>
 </html>
