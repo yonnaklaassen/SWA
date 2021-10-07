@@ -1,6 +1,7 @@
 <html>
   <head>
     <script type="module">
+      import { getDataByPlace, showWeatherDataForecasts, showWeatherDataTemperature, showWeatherDataWind, showWeatherDataPrecipitation, showMinTemperature, showMaxTemperature, showTotalPrecipitation, showAverageWindSpeed, displayError } from './service.js'
 
       window.init = function() {
         Promise.all([fetch('http://localhost:8080/data'), fetch('http://localhost:8080/forecast')])
@@ -9,48 +10,26 @@
         .then(r => Promise.all(r))
         .then(([weatherData, forecasts]) => {
           //Horsens
-          const temperaturesHorsens = weatherData
-          .filter(d => d.type === 'temperature' && d.place === 'Horsens')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
-          const windHorsens = weatherData
-          .filter(d => d.type === 'wind speed' && d.place === 'Horsens')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
-          const precipitationHorsens = weatherData
-          .filter(d => d.type === 'precipitation' && d.place === 'Horsens')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
+          const temperaturesHorsens = getDataByPlace(weatherData, 'temperature', 'Horsens')
+          const windHorsens = getDataByPlace(weatherData, 'wind speed', 'Horsens')
+          const precipitationHorsens = getDataByPlace(weatherData, 'precipitation', 'Horsens')
 
           //Aarhus
-          const temperaturesAarhus = weatherData
-          .filter(d => d.type === 'temperature' && d.place === 'Aarhus')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
-          const windAarhus = weatherData
-          .filter(d => d.type === 'wind speed' && d.place === 'Aarhus')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
-          const precipitationAarhus = weatherData
-          .filter(d => d.type === 'precipitation' && d.place === 'Aarhus')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
+          const temperaturesAarhus = getDataByPlace(weatherData, 'temperature', 'Aarhus')
+          const windAarhus = getDataByPlace(weatherData, 'wind speed', 'Aarhus')
+          const precipitationAarhus = getDataByPlace(weatherData, 'precipitation', 'Aarhus')
 
           //Copenhagen
-          const temperaturesCopenhagen = weatherData
-          .filter(d => d.type === 'temperature' && d.place === 'Copenhagen')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
-          const windCopenhagen = weatherData
-          .filter(d => d.type === 'wind speed' && d.place === 'Copenhagen')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
-          const precipitationCopenhagen = weatherData
-          .filter(d => d.type === 'precipitation' && d.place === 'Copenhagen')
-          .sort((a, b) => b.time > a.time ? 1: -1)
-          .slice(0, 5)
+          const temperaturesCopenhagen = getDataByPlace(weatherData, 'temperature', 'Copenhagen')
+          const windCopenhagen =getDataByPlace(weatherData, 'wind speed', 'Copenhagen')
+          const precipitationCopenhagen = getDataByPlace(weatherData, 'precipitation', 'Copenhagen')
 
-         // console.log(temperaturesHorsens)
+          //Forecasts
+          const forecastHorsens = forecasts.filter(f => f.place === 'Horsens')
+          const forecastAarhus = forecasts.filter(f => f.place === 'Aarhus')
+          const forecastCopenhagen = forecasts.filter(f => f.place === 'Copenhagen')
+
+         //Horsens
          showWeatherDataTemperature(temperaturesHorsens, 0)
          showWeatherDataWind(windHorsens, 0)
          showWeatherDataPrecipitation(precipitationHorsens, 0)
@@ -58,7 +37,9 @@
          showMaxTemperature(temperaturesHorsens, 0)
          showTotalPrecipitation(precipitationHorsens, 0)
          showAverageWindSpeed(windHorsens, 0)
+         showWeatherDataForecasts(forecastHorsens, 0)
 
+         //Aarhus
          showWeatherDataTemperature(temperaturesAarhus, 1)
          showWeatherDataWind(windAarhus, 1)
          showWeatherDataPrecipitation(precipitationAarhus, 1)
@@ -66,7 +47,9 @@
          showMaxTemperature(temperaturesAarhus, 1)
          showTotalPrecipitation(precipitationAarhus, 1)
          showAverageWindSpeed(windAarhus, 1)
+         showWeatherDataForecasts(forecastAarhus, 1)
 
+         //Copenhagen
          showWeatherDataTemperature(temperaturesCopenhagen, 2)
          showWeatherDataWind(windCopenhagen, 2)
          showWeatherDataPrecipitation(precipitationCopenhagen, 2)
@@ -74,86 +57,9 @@
          showMaxTemperature(temperaturesCopenhagen, 2)
          showTotalPrecipitation(precipitationCopenhagen, 2)
          showAverageWindSpeed(windCopenhagen, 2)
+         showWeatherDataForecasts(forecastCopenhagen, 2)
         })
-      }
-
-         const querySelectors = ['#horsens-data', '#aarhus-data', '#copenhagen-data']
-
-         const showWeatherDataTemperature = (weatherData, place) => {
-          const weatherDataDiv = document.querySelector(querySelectors[place]);
-          weatherData.forEach(weatherData  => {
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Value: ${weatherData.value},` +
-          ` Type: ${weatherData.type},` +
-          ` Unit: ${weatherData.unit},` +
-          ` Time: ${weatherData.time},` +
-          ` Place: ${weatherData.place}`
-          weatherDataDiv.append(weatherDataElement)
-        }); 
-      }
-
-      const showWeatherDataWind = (weatherData, place) => {
-          const weatherDataDiv = document.querySelector(querySelectors[place]);
-          weatherData.forEach(weatherData  => {
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Value: ${weatherData.value},` +
-          ` Direction: ${weatherData.direction},` +
-          ` Type: ${weatherData.type},` +
-          ` Unit: ${weatherData.unit},` +
-          ` Time: ${weatherData.time},` +
-          ` Place: ${weatherData.place}`
-          weatherDataDiv.append(weatherDataElement)
-        }); 
-      }
-
-      const showWeatherDataPrecipitation = (weatherData, place) => {
-          const weatherDataDiv = document.querySelector(querySelectors[place]);
-          weatherData.forEach(weatherData  => {
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Value: ${weatherData.value},` +
-          ` Precipitation type: ${weatherData.precipitation_type},` +
-          ` Type: ${weatherData.type},` +
-          ` Unit: ${weatherData.unit},` +
-          ` Time: ${weatherData.time},` +
-          ` Place: ${weatherData.place}`
-          weatherDataDiv.append(weatherDataElement)
-        }); 
-      }
-
-      const showMinTemperature = (weatherData, place) => {
-        const weatherDataDiv = document.querySelector(querySelectors[place]);
-        const values = weatherData.map(d => d.value)
-        const minTemp = Math.min(...values)
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Min Temp value: ${minTemp}`
-          weatherDataDiv.append(weatherDataElement)
-      }
-
-      const showMaxTemperature = (weatherData, place) => {
-        const weatherDataDiv = document.querySelector(querySelectors[place]);
-        const values = weatherData.map(d => d.value)
-        const maxTemp = Math.max(...values)
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Max Temp value: ${maxTemp}`
-          weatherDataDiv.append(weatherDataElement)
-      }
-
-      const showTotalPrecipitation = (weatherData, place) => {
-        const weatherDataDiv = document.querySelector(querySelectors[place]);
-        const values = weatherData.map(d => d.value)
-        const total = values.reduce((a,b) => a+b, 0).toFixed(1)
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Total precipitation: ${total}`
-          weatherDataDiv.append(weatherDataElement)
-      }
-
-      const showAverageWindSpeed = (weatherData, place) => {
-        const weatherDataDiv = document.querySelector(querySelectors[place]);
-        const values = weatherData.map(d => d.value)
-        const average = (values.reduce((a,b) => a+b, 0) / values.length).toFixed(1)
-          const weatherDataElement = document.createElement('p');
-          weatherDataElement.innerText = `Average wind speed: ${average}`
-          weatherDataDiv.append(weatherDataElement)
+        .catch(e => displayError(e))
       }
 
   </script>
@@ -165,5 +71,12 @@
     <div id='aarhus-data'></div>
     <h2>Latest measurements Copenhagen</h2>
     <div id='copenhagen-data'></div>
+    <h2>Forecast Horsens</h2>
+    <div id='horsens-forecast'></div>
+    <h2>Forecast Aarhus</h2>
+    <div id='aarhus-forecast'></div>
+    <h2>Forecast Copenhagen</h2>
+    <div id='copenhagen-forecast'></div>
+    <p id="error-message"></p>
   </body>
 </html>
