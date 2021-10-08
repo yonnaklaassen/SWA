@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type='module'>
+        // helpers
+        import service from "./service.js";
+
+        const cl = service()
+
+        const cities = ["Horsens", "Aarhus", "Copenhagen"]
+        const types = ["temperature", "precipitation", "wind speed", "cloud coverage"]
+
+        window.init = () => {
+
+            cl.getLastMeasurements(types, cities)
+
+            document.getElementById("5days_min_temp").innerHTML = ""
+            cities.forEach(city => cl.getMinTempLast5Days(city))
+
+            document.getElementById("5days_max_temp").innerHTML = ""
+            cities.forEach(city => cl.getMaxTempLast5Days(city))
+
+            document.getElementById("5days_total_precipitation").innerHTML = ""
+            cities.forEach(city => cl.getTotalPercipLast5Days(city))
+
+            document.getElementById("5days_average_wind_speed").innerHTML = ""
+            cities.forEach(city => cl.getAverageWindSpeedLast5Days(city))
+
+            document.getElementById("forecast").innerHTML = ""
+            cities.forEach(city => cl.getForecast(city))
+        }
+
+    </script>
+</head>
+<body onload="init()">
+<h1>Exercise 2 b)</h1>
+<h3>• All data for the latest measurement of each kind:</h3>
+<p id="latest_measurements"></p>
+
+<h3>• Minimum temperature for the last 5 days:</h3>
+<p id="5days_min_temp"></p>
+
+<h3>• Maximum temperature for the last 5 days</h3>
+<p id="5days_max_temp"></p>
+
+<h3>• Total precipitation for the last 5 days</h3>
+<p id="5days_total_precipitation"></p>
+
+<h3>• Average wind speed for the last 5 days</h3>
+<p id="5days_average_wind_speed"></p>
+
+<h3>•	Hourly predictions for the next 24 hours</h3>
+<p id="forecast"></p>
+</body>
+</html>
