@@ -6,7 +6,7 @@ function service() {
     const getLastMeasurements = (types, cities) => {
 
         function latest(data) {
-            return types.map(type => data.filter(data => data.type == type).sort((a, b) => b.time > a.time ? 1 : -1).slice(0, 1))
+            return types.map(type => data.filter(data => data.type == type).sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 1))
         }
 
         const request = new XMLHttpRequest()
@@ -66,8 +66,10 @@ function service() {
     const getMinOrMaxTempLast5Days = (city, minOrMax) => {
         const path = `/data/${city}`
         cl.sendRequestGetResponse(path, (response) => {
-            let minOrMaxTemp = response.filter(data => data.type === "temperature")
-                .sort((a, b) => b.time > a.time ? 1 : -1).slice(0, 5)
+            let sortedByDate = response.filter(type => type.type ==="temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
+            let d = new Date(sortedByDate[0].time)
+            d.setDate(d.getDate()-5)
+            let minOrMaxTemp = sortedByDate.filter( a => new Date(a.time) > d)
                 .reduce((acc, data) => minOrMax == "min" ? Math.min(acc, data.value) : Math.max(acc, data.value), [])
 
             document.getElementById(`5days_${minOrMax}_temp`).textContent += `${city}: ${minOrMaxTemp}, `
@@ -77,8 +79,11 @@ function service() {
     const getTotalPercipLast5Days = (city) => {
         let path = `/data/${city}`
         cl.sendRequestGetResponse(path, (response) => {
-            let total = response.filter(data => data.type === "precipitation")
-                .sort((a, b) => b.time > a.time ? 1 : -1).slice(0, 5)
+            let sortedByDate = response.filter(type => type.type ==="precipitation").sort((a, b) => new Date(b.time) - new Date(a.time))
+            let d = new Date(sortedByDate[0].time)
+            d.setDate(d.getDate()-5)
+            console.log(d)
+            let total = sortedByDate.filter(a => new Date(a.time) > d)
                 .reduce((total, data) => total + data.value, 0)
 
             document.getElementById(`5days_total_precipitation`).textContent += `${city}: ${total}, `
@@ -88,9 +93,12 @@ function service() {
     const getAverageWindSpeedLast5Days = (city) => {
         let path = `/data/${city}`
         cl.sendRequestGetResponse(path, response => {
-            let avg = response.filter(data => data.type === "wind speed")
-                .sort((a, b) => b.time > a.time ? 1 : -1).slice(0, 5)
-                .reduce((total, data) => total + data.value, 0) / 5
+            let sortedByDate = response.filter(type => type.type ==="temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
+            let d = new Date(sortedByDate[0].time)
+            d.setDate(d.getDate()-5)
+            let last5days = sortedByDate.filter(a => new Date(a.time) > d)
+            let size = last5days.length
+            let avg = last5days.reduce((total, data) => total + data.value, 0) / size
             document.getElementById("5days_average_wind_speed").textContent += `${city}: ${avg}, `
         })
     }
