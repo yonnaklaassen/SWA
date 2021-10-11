@@ -1,8 +1,8 @@
 import client from "./client.js"
 function service() {
     const cl = client()
-    // @@@@@@@@@@@@@@@@@@@@@@@@ getLastMeasurements as example of nested requests instead of sending one after another
-    // if written like that not the right place,  sending request should belong to the client
+    // @@@ getLastMeasurements as example of nested requests instead of sending one after another
+    // if written like that, not the right place.
     const getLastMeasurements = (types, cities) => {
 
         function latest(data) {
