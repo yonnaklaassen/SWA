@@ -1,50 +1,19 @@
 const querySelectorsData = ['#horsens-data', '#aarhus-data', '#copenhagen-data']
 const querySelectorsForecast = ['#horsens-forecast', '#aarhus-forecast', '#copenhagen-forecast']
 
-export const getDataByPlace = (data, type, place) => {
-       return data.filter(d => d.type === type && d.place === place)
+export const getDataFromLast5Days = (data, place) => {
+      const today = new Date()
+      let recent5Days = new Date()
+      return data.filter(d => d.place === place && new Date(d.time) > recent5Days.setDate(today.getDate() -5))
         .sort((a, b) => b.time > a.time ? 1: -1)
-        .slice(0, 5)
 }
 
-export const showWeatherDataTemperature = (weatherData, place) => {
+export const displayLatestWeatherData = (weatherData, place) => {
     const weatherDataDiv = document.querySelector(querySelectorsData[place]);
-    weatherData.forEach(weatherData  => {
-    const weatherDataElement = document.createElement('p');
-    weatherDataElement.innerText = `Value: ${weatherData.value},` +
-    ` Type: ${weatherData.type},` +
-    ` Unit: ${weatherData.unit},` +
-    ` Time: ${weatherData.time},` +
-    ` Place: ${weatherData.place}`
-    weatherDataDiv.append(weatherDataElement)
-  }); 
-}
-
-export const showWeatherDataWind = (weatherData, place) => {
-    const weatherDataDiv = document.querySelector(querySelectorsData[place]);
-    weatherData.forEach(weatherData  => {
-    const weatherDataElement = document.createElement('p');
-    weatherDataElement.innerText = `Value: ${weatherData.value},` +
-    ` Direction: ${weatherData.direction},` +
-    ` Type: ${weatherData.type},` +
-    ` Unit: ${weatherData.unit},` +
-    ` Time: ${weatherData.time},` +
-    ` Place: ${weatherData.place}`
-    weatherDataDiv.append(weatherDataElement)
-  }); 
-}
-
-export const showWeatherDataPrecipitation = (weatherData, place) => {
-    const weatherDataDiv = document.querySelector(querySelectorsData[place]);
-    weatherData.forEach(weatherData  => {
-    const weatherDataElement = document.createElement('p');
-    weatherDataElement.innerText = `Value: ${weatherData.value},` +
-    ` Precipitation type: ${weatherData.precipitation_type},` +
-    ` Type: ${weatherData.type},` +
-    ` Unit: ${weatherData.unit},` +
-    ` Time: ${weatherData.time},` +
-    ` Place: ${weatherData.place}`
-    weatherDataDiv.append(weatherDataElement)
+    weatherData.forEach(data  => {
+      const weatherDataElement = document.createElement('p');
+      weatherDataElement.innerText = JSON.stringify(data)
+      weatherDataDiv.append(weatherDataElement)
   }); 
 }
 

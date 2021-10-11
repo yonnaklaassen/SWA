@@ -1,7 +1,7 @@
 <html>
   <head>
     <script type="module">
-      import { getDataByPlace, showWeatherDataForecasts, showWeatherDataTemperature, showWeatherDataWind, showWeatherDataPrecipitation, showMinTemperature, showMaxTemperature, showTotalPrecipitation, showAverageWindSpeed, displayError } from './service.js'
+      import { getDataFromLast5Days, showWeatherDataForecasts, displayLatestWeatherData, showMinTemperature, showMaxTemperature, showTotalPrecipitation, showAverageWindSpeed, displayError } from './service.js'
 
       window.init = function() {
         Promise.all([fetch('http://localhost:8080/data'), fetch('http://localhost:8080/forecast')])
@@ -10,19 +10,14 @@
         .then(r => Promise.all(r))
         .then(([weatherData, forecasts]) => {
           //Horsens
-          const temperaturesHorsens = getDataByPlace(weatherData, 'temperature', 'Horsens')
-          const windHorsens = getDataByPlace(weatherData, 'wind speed', 'Horsens')
-          const precipitationHorsens = getDataByPlace(weatherData, 'precipitation', 'Horsens')
+          const weatherDataHorsens = getDataFromLast5Days(weatherData, 'Horsens')
+          console.log(weatherDataHorsens)
 
           //Aarhus
-          const temperaturesAarhus = getDataByPlace(weatherData, 'temperature', 'Aarhus')
-          const windAarhus = getDataByPlace(weatherData, 'wind speed', 'Aarhus')
-          const precipitationAarhus = getDataByPlace(weatherData, 'precipitation', 'Aarhus')
+          const weatherDataAarhus = getDataFromLast5Days(weatherData, 'Aarhus')
 
           //Copenhagen
-          const temperaturesCopenhagen = getDataByPlace(weatherData, 'temperature', 'Copenhagen')
-          const windCopenhagen =getDataByPlace(weatherData, 'wind speed', 'Copenhagen')
-          const precipitationCopenhagen = getDataByPlace(weatherData, 'precipitation', 'Copenhagen')
+          const weatherDataCopenhagen = getDataFromLast5Days(weatherData, 'Copenhagen')
 
           //Forecasts
           const forecastHorsens = forecasts.filter(f => f.place === 'Horsens')
@@ -30,33 +25,27 @@
           const forecastCopenhagen = forecasts.filter(f => f.place === 'Copenhagen')
 
          //Horsens
-         showWeatherDataTemperature(temperaturesHorsens, 0)
-         showWeatherDataWind(windHorsens, 0)
-         showWeatherDataPrecipitation(precipitationHorsens, 0)
-         showMinTemperature(temperaturesHorsens, 0)
-         showMaxTemperature(temperaturesHorsens, 0)
-         showTotalPrecipitation(precipitationHorsens, 0)
-         showAverageWindSpeed(windHorsens, 0)
+         displayLatestWeatherData(weatherDataHorsens, 0)
+         showMinTemperature(weatherDataHorsens, 0)
+         showMaxTemperature(weatherDataHorsens, 0)
+         showTotalPrecipitation(weatherDataHorsens, 0)
+         showAverageWindSpeed(weatherDataHorsens, 0)
          showWeatherDataForecasts(forecastHorsens, 0)
 
          //Aarhus
-         showWeatherDataTemperature(temperaturesAarhus, 1)
-         showWeatherDataWind(windAarhus, 1)
-         showWeatherDataPrecipitation(precipitationAarhus, 1)
-         showMinTemperature(temperaturesAarhus, 1)
-         showMaxTemperature(temperaturesAarhus, 1)
-         showTotalPrecipitation(precipitationAarhus, 1)
-         showAverageWindSpeed(windAarhus, 1)
+         displayLatestWeatherData(weatherDataAarhus, 1)
+         showMinTemperature(weatherDataAarhus, 1)
+         showMaxTemperature(weatherDataAarhus, 1)
+         showTotalPrecipitation(weatherDataAarhus, 1)
+         showAverageWindSpeed(weatherDataAarhus, 1)
          showWeatherDataForecasts(forecastAarhus, 1)
 
          //Copenhagen
-         showWeatherDataTemperature(temperaturesCopenhagen, 2)
-         showWeatherDataWind(windCopenhagen, 2)
-         showWeatherDataPrecipitation(precipitationCopenhagen, 2)
-         showMinTemperature(temperaturesCopenhagen, 2)
-         showMaxTemperature(temperaturesCopenhagen, 2)
-         showTotalPrecipitation(precipitationCopenhagen, 2)
-         showAverageWindSpeed(windCopenhagen, 2)
+         displayLatestWeatherData(weatherDataCopenhagen, 2)
+         showMinTemperature(weatherDataCopenhagen, 2)
+         showMaxTemperature(weatherDataCopenhagen, 2)
+         showTotalPrecipitation(weatherDataCopenhagen, 2)
+         showAverageWindSpeed(weatherDataCopenhagen, 2)
          showWeatherDataForecasts(forecastCopenhagen, 2)
         })
         .catch(e => displayError(e))
