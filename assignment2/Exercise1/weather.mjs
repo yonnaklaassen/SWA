@@ -3,10 +3,6 @@ export function Weather(data) {
     let typeFilter = null
     let periodFilter = null
 
-    function getPlaceFilter() {
-        return placeFilter
-    }
-
     function setPlaceFilter(place) {
         placeFilter = place
     }
@@ -15,20 +11,12 @@ export function Weather(data) {
         placeFilter = null
     }
 
-    function getTypeFilter() {
-        return typeFilter
-    }
-
     function setTypeFilter(type) {
         typeFilter = type
     }
 
     function clearTypeFilter() {
         typeFilter = null
-    }
-
-    function getPeriodFilter() {
-        return periodFilter
     }
 
     function setPeriodFilter(period) {
@@ -50,7 +38,7 @@ export function Weather(data) {
         f()
         let result = getFilteredData()
         clearAllFilters()
-        return WeatherHistory(result)
+        return Weather(result)
     }
 
     function forPlace(place) {
@@ -71,7 +59,7 @@ export function Weather(data) {
     }
 
     function convertToUsUnits() {
-        data.forEach((weatherPrediction) => {
+        let converted = data.map((weatherPrediction) => {
             switch (weatherPrediction.getType()) {
                 case "Temperature":
                     if (weatherPrediction.getUnit() == "C") {
@@ -91,10 +79,11 @@ export function Weather(data) {
             }
 
         })
+        return Weather(converted)
     }
 
     function convertToInternationalUnits() {
-        data.forEach((weatherPrediction) => {
+        let converted = data.map((weatherPrediction) => {
             switch (weatherPrediction.getType()) {
                 case "Temperature":
                     if (weatherPrediction.getUnit() == "F") {
@@ -113,46 +102,45 @@ export function Weather(data) {
                     break;
             }
         })
-    }
-
-    function add(_data) {
-        data.push(..._data)
+        return Weather(converted)
     }
 
     function getFilteredData() {
+        let filtered;
         if (placeFilter == null) {
             if (typeFilter == null) {
                 if (periodFilter == null) {
-                    return data
+                    filtered = data
                 } else {
-                    return data.filter(d => periodFilter.contains(d.getTime()))
+                    filtered = data.filter(d => periodFilter.contains(d.getTime()))
                 }
             } else {
                 if (periodFilter == null) {
-                    return data.filter(d => d.getType() === typeFilter)
+                    filtered = data.filter(d => d.getType() === typeFilter)
                 } else {
-                    return data.filter(d => periodFilter.contains(d.getTime()) && d.getType() === typeFilter)
+                    filtered = data.filter(d => periodFilter.contains(d.getTime()) && d.getType() === typeFilter)
                 }
             }
         } else {
             if (typeFilter == null) {
                 if (periodFilter == null) {
-                    return data.filter(d => d.getPlace() === placeFilter)
+                    filtered = data.filter(d => d.getPlace() === placeFilter)
                 } else {
-                    return data.filter(d => d.getPlace() === placeFilter && periodFilter.contains(d.getTime()))
+                    filtered = data.filter(d => d.getPlace() === placeFilter && periodFilter.contains(d.getTime()))
                 }
             } else {
                 if (periodFilter == null) {
-                    return data.filter(d => d.getPlace() === placeFilter && d.getType() === typeFilter)
+                    filtered = data.filter(d => d.getPlace() === placeFilter && d.getType() === typeFilter)
                 } else {
-                    return data.filter(d => d.getPlace() === placeFilter && d.getType() === typeFilter && periodFilter.contains(d.getTime()))
+                    filtered = data.filter(d => d.getPlace() === placeFilter && d.getType() === typeFilter && periodFilter.contains(d.getTime()))
                 }
             }
         }
+        return Weather(filtered)
     }
 
     function getData() {
-        return data
+        return Weather(data)
     }
 
     function checkIfEmptyOrDifferentTypes() {
