@@ -54,7 +54,7 @@ export function Weather(data) {
     }
 
     function including(_data) {
-        let result = data.map( () => data.some( r => _data.including(r)))
+        let result = data.filter( () => data.some( r => _data.includes(r)))
         return Weather(result)
     }
 
@@ -140,7 +140,7 @@ export function Weather(data) {
     }
 
     function getData() {
-        return Weather(data)
+        return [...data]
     }
 
     function checkIfEmptyOrDifferentTypes() {
