@@ -79,7 +79,7 @@ export function Weather(data) {
             }
 
         })
-        return Weather(converted)
+        return new Weather(converted)
     }
 
     function convertToInternationalUnits() {
@@ -102,7 +102,7 @@ export function Weather(data) {
                     break;
             }
         })
-        return Weather(converted)
+        return new Weather(converted)
     }
 
     function getFilteredData() {
@@ -136,7 +136,7 @@ export function Weather(data) {
                 }
             }
         }
-        return Weather(filtered)
+        return new Weather(filtered)
     }
 
     function getData() {
