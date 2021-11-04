@@ -182,18 +182,18 @@ export function WindPrediction(time, place, type, unit, min, max, expectedDirect
     const weatherPrediction = WeatherPrediction(state)
 
     function getExpectedDirections() {
-        return state.expectedDirections
+        return [...state.expectedDirections]
     }
 
     function convertToMPH() {
         if (state.unit == "ms") {
-            return new WindPrediction(state.time, state.place, state.type, state.unit = "mph",  state.min *= 0.75, state.max *= 0.75, state.expectedDirections)
+            return new WindPrediction(state.time, state.place, state.type, state.unit = "mph",  state.min *= 0.75, state.max *= 0.75, [...state.expectedDirections])
         }
     }
 
     function convertToMS() {
         if (state.unit == "mph") {
-            return new WindPrediction(state.time, state.place, state.type, state.unit = "ms",  state.min *= 1.25, state.max *= 1.25, state.expectedDirections)
+            return new WindPrediction(state.time, state.place, state.type, state.unit = "ms",  state.min *= 1.25, state.max *= 1.25, [...state.expectedDirections])
         }
     }
 
