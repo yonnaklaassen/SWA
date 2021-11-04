@@ -39,15 +39,13 @@ export function Temperature(time, place, type, unit, value) {
 
     function convertToF() {
         if (state.unit == 'C') {
-            state.value *= 1.25
-            state.unit = "F"
+            return new Temperature(state.time, state.place, state.type, state.unit = "F", state.value *= 1.25)
         }
     }
 
     function convertToC() {
         if (state.unit == 'F') {
-            state.value *= 0.75
-            state.unit = "C"
+            return new Temperature(state.time, state.place, state.type, state.unit = "C", state.value *= 0.75)
         }
     }
 
@@ -55,7 +53,7 @@ export function Temperature(time, place, type, unit, value) {
 }
 
 export function Precipitation(time, place, type, unit, value, precipitationType) {
-    const state = {time, place, type, unit, value}
+    const state = {time, place, type, unit, value, precipitationType}
     const weatherData = WeatherData(state)
 
     function getPrecipitationType() {
@@ -64,15 +62,13 @@ export function Precipitation(time, place, type, unit, value, precipitationType)
 
     function convertToInches() {
         if (state.unit == "mm") {
-            state.value *= 0.75
-            state.unit = "inch"
+            return new Precipitation(state.time, state.place, state.type, state.unit = "inch", state.value *= 0.75, state.precipitationType)
         }
     }
 
     function convertToMM() {
         if (state.unit == "inch") {
-            state.value *= 1.25
-            state.unit = "mm"
+            return new Precipitation(state.time, state.place, state.type, state.unit = "mm", state.value *= 1.25, state.precipitationType)
         }
     }
 
@@ -89,15 +85,13 @@ export function Wind(time, place, type, unit, value, direction) {
 
     function convertToMPH() {
         if (state.unit == "ms") {
-            state.value *= 1.75
-            state.unit = "mph"
+            return new Wind(state.time, state.place, state.type, state.unit = "mph", state.value *= 1.75, state.direction)
         }
     }
 
     function convertToMS() {
         if (this.state == "mph") {
-            state.value *= 0.25
-            state.unit = "ms"
+            return new Wind(state.time, state.place, state.type, state.unit = "ms", state.value *= 0.25, state.direction)
         }
     }
 
@@ -141,18 +135,14 @@ export function TemperaturePrediction(time, place, type, unit, max, min) {
 
     function convertToF() {
         if (state.unit == "C") {
-            state.max = state.max * 0.75
-            state.min = state.min * 0.75
-            state.unit == "F"
+            return new TemperaturePrediction(state.time, state.place, state.type, state.unit == "F", state.max = state.max * 0.75, state.min = state.min * 0.75)
 
         }
     }
 
     function convertToC() {
         if (state.unit == "F") {
-            state.max = state.max * 1.25
-            state.min = state.min * 1.25
-            state.unit = "C"
+            return new TemperaturePrediction(state.time, state.place, state.type, state.unit == "C", state.max = state.max * 1.25, state.min = state.min * 1.25)
         }
     }
 
@@ -173,17 +163,13 @@ export function PrecipitationPrediction(time, place, type, unit, min, max, preci
 
     function convertToInches() {
         if (state.unit == "mm") {
-            state.min *= 1.25
-            state.max *= 1.25
-            state.unit = "inch"
+            return new PrecipitationPrediction(state.time, state.place, state.type, state.unit = "inch", state.min *= 1.25, state.max *= 1.25, state.precipitationType)
         }
     }
 
     function convertToMM() {
         if (state.unit == "inch") {
-            state.min *= 0.75
-            state.max *= 0.75
-            state.unit = "mm"
+            return new PrecipitationPrediction(state.time, state.place, state.type, state.unit = "mm", state.min *= 0.75, state.max *= 0.75, state.precipitationType)
         }
     }
 
@@ -196,22 +182,18 @@ export function WindPrediction(time, place, type, unit, min, max, expectedDirect
     const weatherPrediction = WeatherPrediction(state)
 
     function getExpectedDirections() {
-        return state.expectedDirections
+        return [...state.expectedDirections]
     }
 
     function convertToMPH() {
         if (state.unit == "ms") {
-            state.min *= 0.75
-            state.max *= 0.75
-            state.unit = "mph"
+            return new WindPrediction(state.time, state.place, state.type, state.unit = "mph",  state.min *= 0.75, state.max *= 0.75, [...state.expectedDirections])
         }
     }
 
     function convertToMS() {
         if (state.unit == "mph") {
-            state.min *= 1.25
-            state.max *= 1.25
-            state.unit = "ms"
+            return new WindPrediction(state.time, state.place, state.type, state.unit = "ms",  state.min *= 1.25, state.max *= 1.25, [...state.expectedDirections])
         }
     }
 
