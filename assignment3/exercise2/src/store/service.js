@@ -23,55 +23,59 @@ export class Service {
 
         })
         return tempVal
-
     }
 
-    getMinTempLast5Days(city) {
-        this.getMinOrMaxTempLast5Days(city, "min")
+    getMinTemp(city, dateFrom, dateTo) {
+        return this.getMinOrMaxTemp(city, "min", dateFrom, dateTo)
     }
 
-    getMaxTempLast5Days(city) {
-        this.getMinOrMaxTempLast5Days(city, "max")
+    getMaxTemp(city, dateFrom, dateTo) {
+        return this.getMinOrMaxTemp(city, "max", dateFrom, dateTo)
     }
 
-    getMinOrMaxTempLast5Days(city, minOrMax) {
-        const path = `/data/${city}`
-        this.cl.sendRequestGetResponse(path, (response) => {
+    async getMinOrMaxTemp(city, minOrMax, dateFrom, dateTo) {
+        const path = `data/${city}`
+        let minOrMaxTemp = 0
+        await this.cl.sendRequestGetResponse(path, (response) => {
             let sortedByDate = response.filter(type => type.type === "temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
-            let d = new Date(sortedByDate[0].time)
-            d.setDate(d.getDate() - 5)
-            let minOrMaxTemp = sortedByDate.filter(a => new Date(a.time) > d)
-                .reduce((acc, data) => minOrMax == "min" ? Math.min(acc, data.value) : Math.max(acc, data.value), [])
+            let _dateFrom = new Date(dateFrom)
+            let _dateTo = new Date(dateTo)
 
-            document.getElementById(`5days_${minOrMax}_temp`).textContent += `${city}: ${minOrMaxTemp}, `
+            minOrMaxTemp = sortedByDate.filter(a => new Date(a.time) >= _dateFrom & new Date(a.time) <= _dateTo)
+                .reduce((acc, data) => minOrMax === "min" ? Math.min(acc, data.value) : Math.max(acc, data.value), [])
+            console.log(minOrMaxTemp)
         })
+        return minOrMaxTemp
     }
 
-    getTotalPercipLast5Days(city) {
+    getTotalPercip(city, dateFrom, dateTo) {
         let path = `/data/${city}`
+        let total = undefined
         this.cl.sendRequestGetResponse(path, (response) => {
             let sortedByDate = response.filter(type => type.type === "precipitation").sort((a, b) => new Date(b.time) - new Date(a.time))
-            let d = new Date(sortedByDate[0].time)
-            d.setDate(d.getDate() - 5)
-            console.log(d)
-            let total = sortedByDate.filter(a => new Date(a.time) > d)
+            let _dateFrom = new Date(dateFrom)
+            let _dateTo = new Date(dateTo)
+
+            total = sortedByDate.filter(a => new Date(a.time) >= _dateFrom & new Date(a.time) <= _dateTo)
                 .reduce((total, data) => total + data.value, 0)
 
-            document.getElementById(`5days_total_precipitation`).textContent += `${city}: ${total}, `
         })
+        return total
     }
 
-    getAverageWindSpeedLast5Days(city) {
+    getAverageWindSpeed(city, dateFrom, dateTo) {
         let path = `/data/${city}`
+        let avg
         this.cl.sendRequestGetResponse(path, response => {
             let sortedByDate = response.filter(type => type.type === "temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
-            let d = new Date(sortedByDate[0].time)
-            d.setDate(d.getDate() - 5)
-            let last5days = sortedByDate.filter(a => new Date(a.time) > d)
-            let size = last5days.length
-            let avg = last5days.reduce((total, data) => total + data.value, 0) / size
-            document.getElementById("5days_average_wind_speed").textContent += `${city}: ${avg}, `
+            let _dateFrom = new Date(dateFrom)
+            let _dateTo = new Date(dateTo)
+
+            let days = sortedByDate.filter(a => new Date(a.time) >= _dateFrom & new Date(a.time) <= _dateTo)
+            let size = days.length
+            avg = days.reduce((total, data) => total + data.value, 0) / size
         })
+        return avg
     }
 
     getForecast(city) {

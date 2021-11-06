@@ -23,17 +23,21 @@
     <h3>{{selectedCity}}</h3>
 
     <WeatherByCity :city="selectedCity"/>
+
+    <WeatherDetails :city="selectedCity" :dateFrom="dateFrom" :dateTo="dateTo" />
   </div>
 </template>
 
 <script>
 import WeatherByCity from "@/components/WeatherByCity";
-import DatePick from 'vue-date-pick'; // npm install vue-date-pick
+import DatePick from 'vue-date-pick'; // TODO: npm install vue-date-pick
 import 'vue-date-pick/dist/vueDatePick.css';
+import WeatherDetails from "@/components/WeatherDetails";
 
 export default {
   name:  "App",
   components: {
+    WeatherDetails,
     WeatherByCity,
     DatePick,
 

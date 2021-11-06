@@ -1,11 +1,7 @@
 class Client {
 
-    constructor() {
-        this.request = new XMLHttpRequest()
-    }
-
-    sendRequestGetResponse(path, f) {
-        fetch(`http://localhost:8080/${path}`,)
+    async sendRequestGetResponse(path, f) {
+        await fetch(`http://localhost:8080/${path}`,{method:"GET"})
             .then(res => {
                 if (res.ok)
                     return res

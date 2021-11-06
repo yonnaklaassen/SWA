@@ -11,13 +11,13 @@ export default {
   props: ['city'],
   data() {
     return {
+      service: new Service(),
       measurements: "",
     }
   },
   methods: {
     getLastMeasurements(){
-      const service = new Service()
-      this.measurements = service.getLastMeasurements(this.city)
+      this.measurements = this.service.getLastMeasurements(this.city)
     },
   },
   watch: {
