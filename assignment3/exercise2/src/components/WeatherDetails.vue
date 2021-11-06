@@ -26,19 +26,33 @@ export default {
       avrWind: ""
     }
   },
-  methods: {
-    getMaxTemperature(){
-      console.log(this.maxTemp)
-      let promise = this.service.getMaxTemp(this.city, this.dateFrom, this.dateTo)
-      promise.then(result => {
-        this.maxTemp = result
-      })
+  computed:{
+    dateChange(){
+      return [this.dateFrom, this.dateTo, this.city]
     }
   },
+  methods: {
+    getMinTemperature(){
+      this.service.getMinTemp(this.city, this.dateFrom, this.dateTo).then(result => this.minTemp = result)
+    },
+    getMaxTemperature(){
+      this.service.getMaxTemp(this.city, this.dateFrom, this.dateTo).then(result => this.maxTemp = result)
+    },
+    getTotalPrecipitation(){
+      this.service.getTotal(this.city, this.dateFrom, this.dateTo).then(r => this.totalPrecip = r)
+    },
+    getAverageWind(){
+      this.service.getAverageWindSpeed(this.city, this.dateFrom, this.dateTo).then(r => this.avrWind = r)
+    }
+
+  },
   watch:{
-    dateTo: {
+    dateChange: {
       handler() {
         this.getMaxTemperature()
+        this.getMinTemperature()
+        this.getTotalPrecipitation()
+        this.getAverageWind()
       }
     }
   }

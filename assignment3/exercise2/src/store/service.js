@@ -48,10 +48,14 @@ export class Service {
         return minOrMaxTemp
     }
 
-    getTotalPercip(city, dateFrom, dateTo) {
-        let path = `/data/${city}`
+    getTotal(city, dateFrom, dateTo){
+        return this.getTotalPercip(city,dateFrom,dateTo)
+    }
+
+    async getTotalPercip(city, dateFrom, dateTo) {
+        let path = `data/${city}`
         let total = undefined
-        this.cl.sendRequestGetResponse(path, (response) => {
+        await this.cl.sendRequestGetResponse(path, (response) => {
             let sortedByDate = response.filter(type => type.type === "precipitation").sort((a, b) => new Date(b.time) - new Date(a.time))
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
@@ -63,10 +67,10 @@ export class Service {
         return total
     }
 
-    getAverageWindSpeed(city, dateFrom, dateTo) {
-        let path = `/data/${city}`
+    async getAverageWindSpeed(city, dateFrom, dateTo) {
+        let path = `data/${city}`
         let avg
-        this.cl.sendRequestGetResponse(path, response => {
+        await this.cl.sendRequestGetResponse(path, response => {
             let sortedByDate = response.filter(type => type.type === "temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
