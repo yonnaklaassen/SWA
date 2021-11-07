@@ -39,7 +39,7 @@ export default {
       this.service.getMaxTemp(this.city, this.dateFrom, this.dateTo).then(result => this.maxTemp = result)
     },
     getTotalPrecipitation(){
-      this.service.getTotal(this.city, this.dateFrom, this.dateTo).then(r => this.totalPrecip = r)
+      this.service.getTotalPercip(this.city, this.dateFrom, this.dateTo).then(r => this.totalPrecip = r)
     },
     getAverageWind(){
       this.service.getAverageWindSpeed(this.city, this.dateFrom, this.dateTo).then(r => this.avrWind = r)

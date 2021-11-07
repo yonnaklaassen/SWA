@@ -27,6 +27,8 @@
     <WeatherDetails :city="selectedCity" :dateFrom="dateFrom" :dateTo="dateTo" />
 
     <WeatherForecast :city="selectedCity"/>
+
+    <ReportWeatherData/>
   </div>
 </template>
 
@@ -36,10 +38,12 @@ import DatePick from 'vue-date-pick'; // TODO: npm install vue-date-pick
 import 'vue-date-pick/dist/vueDatePick.css';
 import WeatherDetails from "@/components/WeatherDetails";
 import WeatherForecast from "@/components/WeatherForecast";
+import ReportWeatherData from "@/components/ReportWeatherData";
 
 export default {
   name:  "App",
   components: {
+    ReportWeatherData,
     WeatherForecast,
     WeatherDetails,
     WeatherByCity,

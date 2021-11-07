@@ -11,7 +11,7 @@ export class Service {
         const path = `data/${city}`
         let tempVal = []
 
-        this.cl.sendRequestGetResponse(path, (response) => {
+        this.cl.sendGetRequest(path, (response) => {
             let temp = types.map(type => response.filter(data => data.type === type)
                 .sort((a, b) => new Date(b.time) - new Date(a.time))
                 .slice(0, 1))
@@ -36,7 +36,7 @@ export class Service {
     async getMinOrMaxTemp(city, minOrMax, dateFrom, dateTo) {
         const path = `data/${city}`
         let minOrMaxTemp
-        await this.cl.sendRequestGetResponse(path, (response) => {
+        await this.cl.sendGetRequest(path, (response) => {
             let sortedByDate = response.filter(type => type.type === "temperature")
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
@@ -48,14 +48,10 @@ export class Service {
         return minOrMaxTemp
     }
 
-    getTotal(city, dateFrom, dateTo){
-        return this.getTotalPercip(city,dateFrom,dateTo)
-    }
-
     async getTotalPercip(city, dateFrom, dateTo) {
         let path = `data/${city}`
         let total = undefined
-        await this.cl.sendRequestGetResponse(path, (response) => {
+        await this.cl.sendGetRequest(path, (response) => {
             let sortedByDate = response.filter(type => type.type === "precipitation")
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
@@ -70,7 +66,7 @@ export class Service {
     async getAverageWindSpeed(city, dateFrom, dateTo) {
         let path = `data/${city}`
         let avg
-        await this.cl.sendRequestGetResponse(path, response => {
+        await this.cl.sendGetRequest(path, response => {
             let sortedByDate = response.filter(type => type.type === "wind speed")
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
@@ -85,7 +81,7 @@ export class Service {
     async getForecast(city, dateFrom, dateTo) {
         let path = `forecast/${city}`
         let responseAsString
-        await this.cl.sendRequestGetResponse(path, response => {
+        await this.cl.sendGetRequest(path, response => {
             console.log(response)
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
@@ -94,5 +90,10 @@ export class Service {
             responseAsString = days
         })
         return responseAsString
+    }
+
+    sendHistoricalData(body){
+        let path ='data'
+        this.cl.sendPostRequest(path,body)
     }
 }
