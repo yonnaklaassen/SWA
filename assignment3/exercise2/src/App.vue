@@ -13,7 +13,7 @@
         :format="'YYYY-MM-DD HH:mm'"
     ></date-pick>
 
-    <label>Date From</label>
+    <label>Date To</label>
     <date-pick
         v-model="dateTo"
         :pickTime="true"
@@ -25,6 +25,8 @@
     <WeatherByCity :city="selectedCity"/>
 
     <WeatherDetails :city="selectedCity" :dateFrom="dateFrom" :dateTo="dateTo" />
+
+    <WeatherForecast :city="selectedCity"/>
   </div>
 </template>
 
@@ -33,10 +35,12 @@ import WeatherByCity from "@/components/WeatherByCity";
 import DatePick from 'vue-date-pick'; // TODO: npm install vue-date-pick
 import 'vue-date-pick/dist/vueDatePick.css';
 import WeatherDetails from "@/components/WeatherDetails";
+import WeatherForecast from "@/components/WeatherForecast";
 
 export default {
   name:  "App",
   components: {
+    WeatherForecast,
     WeatherDetails,
     WeatherByCity,
     DatePick,

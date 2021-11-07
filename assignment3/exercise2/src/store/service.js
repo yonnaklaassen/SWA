@@ -35,9 +35,9 @@ export class Service {
 
     async getMinOrMaxTemp(city, minOrMax, dateFrom, dateTo) {
         const path = `data/${city}`
-        let minOrMaxTemp = 0
+        let minOrMaxTemp
         await this.cl.sendRequestGetResponse(path, (response) => {
-            let sortedByDate = response.filter(type => type.type === "temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
+            let sortedByDate = response.filter(type => type.type === "temperature")
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
 
@@ -56,7 +56,7 @@ export class Service {
         let path = `data/${city}`
         let total = undefined
         await this.cl.sendRequestGetResponse(path, (response) => {
-            let sortedByDate = response.filter(type => type.type === "precipitation").sort((a, b) => new Date(b.time) - new Date(a.time))
+            let sortedByDate = response.filter(type => type.type === "precipitation")
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
 
@@ -71,7 +71,7 @@ export class Service {
         let path = `data/${city}`
         let avg
         await this.cl.sendRequestGetResponse(path, response => {
-            let sortedByDate = response.filter(type => type.type === "temperature").sort((a, b) => new Date(b.time) - new Date(a.time))
+            let sortedByDate = response.filter(type => type.type === "wind speed")
             let _dateFrom = new Date(dateFrom)
             let _dateTo = new Date(dateTo)
 
@@ -82,11 +82,17 @@ export class Service {
         return avg
     }
 
-    getForecast(city) {
-        let path = `/forecast/${city}`
-        this.cl.sendRequestGetResponse(path, response => {
-            let responseAsString = JSON.stringify(response)
-            document.getElementById("forecast").textContent += `${city}: ${responseAsString}, `
+    async getForecast(city, dateFrom, dateTo) {
+        let path = `forecast/${city}`
+        let responseAsString
+        await this.cl.sendRequestGetResponse(path, response => {
+            console.log(response)
+            let _dateFrom = new Date(dateFrom)
+            let _dateTo = new Date(dateTo)
+            let days = response.filter(a => new Date(a.time) >= _dateFrom & new Date(a.time) <= _dateTo)
+            console.log(days)
+            responseAsString = days
         })
+        return responseAsString
     }
 }
