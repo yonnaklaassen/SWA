@@ -5,11 +5,38 @@
     <title>Title</title>
     <script>
         let ws
+        let init = true
 
-        const addWarning = (text) =>{
+        const addWarning = (text) => {
             const li = document.createElement('li')
-            li.innerText = text
+            li.setAttribute("id", `${text.id}`)
+            li.innerText = JSON.stringify(text)
             document.querySelector('#warnings').appendChild(li)
+        }
+        const updateWarning = (element, newData) => {
+            const a = document.createElement('a')
+            a.innerText = JSON.stringify(newData)
+            element.appendChild(a)
+        }
+
+        const initData = message => {
+            let json = JSON.parse(message.data)
+
+            json.warnings.forEach(warning => {
+                let element = document.getElementById(`${warning.id}`)
+                if (element === null) {
+                    addWarning(warning)
+                } else {
+                    updateWarning(element, warning)
+                }
+                // addWarning(warning)
+            })
+            init = false
+        }
+
+        window.helper = () => {
+            let element = document.getElementById('1')
+            updateWarning(element, "test")
         }
 
         window.subscribe = () => {
@@ -20,7 +47,18 @@
                 ws.send(message)
             }
             ws.onmessage = message => {
-                addWarning(message.data)
+                console.log("new data")
+                if(init){
+                    initData(message)
+                }else {
+                    let json = JSON.parse(message.data)
+                    let element = document.getElementById(`${json.id}`)
+                    if (element === null) {
+                        addWarning(json)
+                    } else {
+                        updateWarning(element, json)
+                    }
+                }
             }
         }
     </script>
@@ -29,7 +67,10 @@
 <div id='subscribe'>
     <button onclick='subscribe()'>Subscribe</button>
 </div>
-<div >
+<div>
+    <button onclick="helper()">Help</button>
+</div>
+<div>
     Warnings:<br>
     <ul id="warnings"></ul>
 </div>
