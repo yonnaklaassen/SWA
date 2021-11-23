@@ -5,7 +5,10 @@
     <title>Title</title>
     <script>
         let ws
-        let init = true
+
+        let initBol
+        let warningsOn
+        let minimumSeverity = 0
 
         const addWarning = (text) => {
             const li = document.createElement('li')
@@ -22,37 +25,58 @@
         const initData = message => {
             let json = JSON.parse(message.data)
 
-            json.warnings.forEach(warning => {
-                let element = document.getElementById(`${warning.id}`)
-                if (element === null) {
-                    addWarning(warning)
-                } else {
-                    updateWarning(element, warning)
-                }
-                // addWarning(warning)
-            })
-            init = false
+            json.warnings.forEach(warning => {addWarning(warning)})
+            initBol = false
         }
 
         window.helper = () => {
-            let element = document.getElementById('1')
-            updateWarning(element, "test")
+            location.reload();
         }
 
-        window.subscribe = () => {
+        window.unSubscribe = () =>{
+            ws.onopen = () => {
+                const message = "unsubscribe"
+                ws.send(message)
+            }
+            ws.onmessage = message => {
+                console.log(message)
+            }
+        }
 
+        window.warningsOnOff = () => {
+            if(warningsOn===true){
+                unSubscribe()
+                document.getElementById("warnings").style.display = "none"
+                warningsOn=false
+            }else {
+                location.reload()
+                warningsOn=true
+            }
+        }
+
+        window.setMinSeverity = () => {
+            minimumSeverity = document.getElementById("minSeverity").value
+        }
+
+        window.init = () => {
+            console.log("something")
             ws = new WebSocket("ws://localhost:8090/warnings")
             ws.onopen = () => {
                 const message = "subscribe"
                 ws.send(message)
+                initBol = true
+                warningsOn = true
             }
             ws.onmessage = message => {
                 console.log("new data")
-                if(init){
+                if(initBol){
                     initData(message)
                 }else {
                     let json = JSON.parse(message.data)
                     let element = document.getElementById(`${json.id}`)
+
+
+
                     if (element === null) {
                         addWarning(json)
                     } else {
@@ -63,10 +87,17 @@
         }
     </script>
 </head>
-<body>
-<div id='subscribe'>
-    <button onclick='subscribe()'>Subscribe</button>
+<body onload="init()">
+<div>
+    <button onclick="warningsOnOff()">Warnings on/off</button>
 </div>
+
+<div>
+    Minimum severity
+    <input type="text" id="minSeverity">
+    <button onclick="setMinSeverity()">Set min severity fot warnings</button>
+</div>
+
 <div>
     <button onclick="helper()">Help</button>
 </div>
