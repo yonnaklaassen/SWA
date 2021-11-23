@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        let ws
+
+        const addWarning = (text) =>{
+            const li = document.createElement('li')
+            li.innerText = text
+            document.querySelector('#warnings').appendChild(li)
+        }
+
+        window.subscribe = () => {
+
+            ws = new WebSocket("ws://localhost:8090/warnings")
+            ws.onopen = () => {
+                const message = "subscribe"
+                ws.send(message)
+            }
+            ws.onmessage = message => {
+                addWarning(message.data)
+            }
+        }
+    </script>
+</head>
+<body>
+<div id='subscribe'>
+    <button onclick='subscribe()'>Subscribe</button>
+</div>
+<div >
+    Warnings:<br>
+    <ul id="warnings"></ul>
+</div>
+
+</body>
+</html>
