@@ -1,0 +1,19 @@
+<div>
+  <button id="start" (click)="onStartRunning()">start</button>
+  <button id="stop" (click)="onStopRunning()">stop</button>
+  <label htmlFor="severity">Severity (between 1 and 10):</label>
+  <input type="number" id="severity" name="severity" min="1" max="10" [(ngModel)]="severity"/>
+  <button id="reset" (click)="onSeverityReset()">Reset</button>
+  <h2>CHANGES FROM SERVER</h2>
+  <table *ngIf="updatedWarnings">
+    <tr *ngFor="let warning of updatedWarnings">
+      <td>{{toJSON(warning)}}</td>
+    </tr>
+  </table>
+  <h2>WARNINGS FROM SERVER</h2>
+  <table *ngIf="latestWarnings">
+    <tr *ngFor="let warning of latestWarnings">
+      <td>{{toJSON(warning)}}</td>
+    </tr>
+  </table>
+</div>
