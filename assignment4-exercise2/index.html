@@ -1,110 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script>
+    <script type="module">
+        import {Warnings} from "./index.js";
+        import {Subject} from 'https://dev.jspm.io/rxjs@6/_esm2015';
+        import {filter} from 'https://dev.jspm.io/rxjs@6/_esm2015/operators';
+
+
+        let warnings
         let ws
-
-        let initBol
         let warningsOn
-        let minimumSeverity = 0
 
-        const addWarning = (text) => {
-            const li = document.createElement('li')
-            li.setAttribute("id", `${text.id}`)
-            li.innerText = JSON.stringify(text)
-            document.querySelector('#warnings').appendChild(li)
-        }
-        const updateWarning = (element, newData) => {
-            const a = document.createElement('a')
-            a.innerText = JSON.stringify(newData)
-            element.appendChild(a)
-        }
+        let messages
+        let subscription
 
-        const initData = message => {
-            let json = JSON.parse(message.data)
-
-            json.warnings.forEach(warning => {addWarning(warning)})
-            initBol = false
-        }
-
-        window.helper = () => {
-            location.reload();
-        }
-
-        window.unSubscribe = () =>{
+        const unSubscribe = () => {
             ws.onopen = () => {
                 const message = "unsubscribe"
                 ws.send(message)
             }
-            ws.onmessage = message => {
-                console.log(message)
-            }
         }
 
         window.warningsOnOff = () => {
-            if(warningsOn===true){
+            if (warningsOn === true) {
                 unSubscribe()
                 document.getElementById("warnings").style.display = "none"
-                warningsOn=false
-            }else {
+                warningsOn = false
+            } else {
                 location.reload()
-                warningsOn=true
-            }
-        }
-
-        window.setMinSeverity = () => {
-            minimumSeverity = document.getElementById("minSeverity").value
-        }
-
-        window.init = () => {
-            console.log("something")
-            ws = new WebSocket("ws://localhost:8090/warnings")
-            ws.onopen = () => {
-                const message = "subscribe"
-                ws.send(message)
-                initBol = true
                 warningsOn = true
             }
+        }
+
+        window.changeMinSeverity = () => {
+            let sev = document.getElementById("minSeverity").value
+
+            subscription.unsubscribe(warnings.retrieveData)
+            subscription = messages.pipe(filter(warning => warning.severity >= sev)).subscribe(warnings.retrieveData)
+        }
+
+        window.load = () => {
+            console.log("something")
+            messages = new Subject()
+            warnings = new Warnings()
+            ws = new WebSocket("ws://localhost:8090/warnings")
+            warningsOn = true
+            let isFirstMessage = true
+
+            subscription = messages.subscribe(warnings.retrieveData)
+            ws.onopen = () => {
+                ws.send("subscribe")
+            }
             ws.onmessage = message => {
-                console.log("new data")
-                if(initBol){
-                    initData(message)
-                }else {
-                    let json = JSON.parse(message.data)
-                    let element = document.getElementById(`${json.id}`)
-
-
-
-                    if (element === null) {
-                        addWarning(json)
-                    } else {
-                        updateWarning(element, json)
-                    }
+                let json = JSON.parse(message.data)
+                if (isFirstMessage) {
+                    json.warnings.forEach(warning => {
+                        messages.next(warning)
+                    })
+                    isFirstMessage = false
+                } else {
+                    let sev = document.getElementById("minSeverity").value
+                    console.log(`severity set:${sev} @received data with severity: ${json.severity} and if: ${json.id}`)
+                    messages.next(json)
                 }
             }
         }
     </script>
 </head>
-<body onload="init()">
+<body onload="load()">
 <div>
     <button onclick="warningsOnOff()">Warnings on/off</button>
 </div>
-
 <div>
-    Minimum severity
-    <input type="text" id="minSeverity">
-    <button onclick="setMinSeverity()">Set min severity fot warnings</button>
+    <label for="minSeverity">Minimum severity: </label>
+    <input id="minSeverity" name="minimum severity"><br><br>
+    <button id="btn" onclick="window.changeMinSeverity()" name="SET">Set min severity</button>
 </div>
 
-<div>
-    <button onclick="helper()">Help</button>
-</div>
 <div>
     Warnings:<br>
     <ul id="warnings"></ul>
 </div>
-
 </body>
 </html>
