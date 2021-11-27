@@ -1,0 +1,86 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="module">
+        import {Warnings} from "./index.js";
+        import {Subject} from 'https://dev.jspm.io/rxjs@6/_esm2015';
+        import {filter} from 'https://dev.jspm.io/rxjs@6/_esm2015/operators';
+
+
+        let warnings
+        let ws
+        let warningsOn
+
+        let messages
+        let subscription
+
+        const unSubscribe = () => {
+            ws.onopen = () => {
+                const message = "unsubscribe"
+                ws.send(message)
+            }
+        }
+
+        window.warningsOnOff = () => {
+            if (warningsOn === true) {
+                unSubscribe()
+                document.getElementById("warnings").style.display = "none"
+                warningsOn = false
+            } else {
+                location.reload()
+                warningsOn = true
+            }
+        }
+
+        window.changeMinSeverity = () => {
+            let sev = document.getElementById("minSeverity").value
+
+            subscription.unsubscribe(warnings.retrieveData)
+            subscription = messages.pipe(filter(warning => warning.severity >= sev)).subscribe(warnings.retrieveData)
+        }
+
+        window.load = () => {
+            console.log("something")
+            messages = new Subject()
+            warnings = new Warnings()
+            ws = new WebSocket("ws://localhost:8090/warnings")
+            warningsOn = true
+            let isFirstMessage = true
+
+            subscription = messages.subscribe(warnings.retrieveData)
+            ws.onopen = () => {
+                ws.send("subscribe")
+            }
+            ws.onmessage = message => {
+                let json = JSON.parse(message.data)
+                if (isFirstMessage) {
+                    json.warnings.forEach(warning => {
+                        messages.next(warning)
+                    })
+                    isFirstMessage = false
+                } else {
+                    let sev = document.getElementById("minSeverity").value
+                    console.log(`severity set:${sev} @received data with severity: ${json.severity} and if: ${json.id}`)
+                    messages.next(json)
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="load()">
+<div>
+    <button onclick="warningsOnOff()">Warnings on/off</button>
+</div>
+<div>
+    <label for="minSeverity">Minimum severity: </label>
+    <input id="minSeverity" name="minimum severity"><br><br>
+    <button id="btn" onclick="window.changeMinSeverity()" name="SET">Set min severity</button>
+</div>
+
+<div>
+    Warnings:<br>
+    <ul id="warnings"></ul>
+</div>
+</body>
+</html>
